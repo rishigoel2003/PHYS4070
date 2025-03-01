@@ -11,6 +11,7 @@ using ComplexVector = vector<Complex>;
 #include "functions.hpp"
 
 
+
 int main() {
     // Parameters
     const double L = 20.0;              // Domain size
@@ -20,7 +21,7 @@ int main() {
     const double tMax = 10.0;           // Maximum simulation time
     const int numSteps = tMax / dt;     // Number of time steps
     const double g = -1.0;              // Interaction strength (attractive)
-    const int saveInterval = 100;       // Save data every saveInterval steps
+    const int saveInterval = 10;       // Save data every saveInterval steps
     
     vector<double> x = initialise_grid(N, L, dx);
     

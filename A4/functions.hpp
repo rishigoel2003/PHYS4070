@@ -29,7 +29,7 @@ ComplexVector calculateRHS(const ComplexVector& psi, double dx, double g) {
         Complex nonlinear = g * norm(psi[i]) * psi[i];
         
         // Combined right-hand side: -d²ψ/dx² + g|ψ|²ψ
-        rhs[i] = Complex(0, 1) * (-d2psi + nonlinear);
+        rhs[i] = -Complex(0, 1) * (-d2psi + nonlinear);
     }
     
     // Boundary conditions: ψ(-L/2) = ψ(L/2) = 0

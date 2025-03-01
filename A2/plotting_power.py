@@ -96,7 +96,7 @@ ax2.grid(True, alpha=0.3, which="both")
 ax2.legend()
 
 plt.tight_layout()
-# plt.savefig('ising_critical_exponents_with_theory.png', dpi=300)
+plt.savefig('Plots/2.2_B.png', dpi=300)
 plt.show()
 
 # Print the results and comparison with theory

@@ -87,7 +87,7 @@ plt.legend()
 plt.grid(True, alpha=0.3)
 
 plt.tight_layout()
-# plt.savefig('ising_model_results.png', dpi=300)
+plt.savefig('Plots/2.1_A.png', dpi=300)
 plt.show()
 
 
@@ -120,11 +120,11 @@ plt.axvline(x=critical_temp, color='r', linestyle='--',
 plt.axvline(x=2.269, color='g', linestyle='--', 
             label=f'Theoretical critical T = 2.269')
 plt.xlabel('Temperature')
-plt.ylabel('Specific Heat')
+plt.ylabel('Specific Heat per spin')
 plt.title('Specific Heat vs Temperature')
 plt.legend()
 plt.grid(True, alpha=0.3)
-# plt.savefig('specific_heat.png', dpi=300)
+plt.savefig('Plots/2.1_B.png', dpi=300)
 plt.show()
 
 
@@ -147,9 +147,9 @@ plt.axvline(x=critical_temp, color='r', linestyle='--',
 plt.axvline(x=2.269, color='g', linestyle='--', 
             label=f'Theoretical critical T = 2.269')
 plt.xlabel('Temperature')
-plt.ylabel('Magnetic Susceptibility')
+plt.ylabel('Magnetic Susceptibility per spin')
 plt.title('Susceptibility vs Temperature')
 plt.legend()
 plt.grid(True, alpha=0.3)
-# plt.savefig('susceptibility.png', dpi=300)
+plt.savefig('Plots/2.1_C.png', dpi=300)
 plt.show()
