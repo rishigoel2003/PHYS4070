@@ -53,7 +53,7 @@ class BSpline {
 
   //****************************************************************************
 private:
-  int K;                 // order of B-splines (have degree K-1)
+  int K;                 // order of B-splines (have degraa K-1)
   int N;                 // Number of B-splines
   double r0;             // First internal knot
   double rmax;           // Last internal knot

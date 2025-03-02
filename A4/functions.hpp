@@ -94,6 +94,23 @@ void gaussian(ComplexVector& psi, vector<double> x, double A, double sigma, doub
     
 }
 
+// Initial condition: Bright soliton solution
+void soliton(ComplexVector& psi, vector<double> x, double A, double B, double C, int N, int L, double dx) {
+    
+    for (int i = 0; i < N; ++i) {
+        
+        psi[i] = A * cosh(B * x[i]) * exp(Complex(0, C * x[i]));
+    }
+
+    // Normalize the wavefunction
+    double initialNorm = calculateNorm(psi, dx);
+    for (int i = 0; i < N; ++i) {
+        psi[i] /= sqrt(initialNorm);
+    }
+    
+}
+
+
 
 vector<double> initialise_grid(int N, int L, double dx){
     // Initialize grid
