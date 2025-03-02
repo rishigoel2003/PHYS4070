@@ -3,20 +3,11 @@ set -e  # Exit on error
 #
 # Compile and run question B1
 echo "Compiling and running simulation"
-g++ part1.cpp -o part1 && ./part1 &&
+g++ part1_AB.cpp -o part1_AB && ./part1_AB &&
+g++ part1_C.cpp -o part1_C && ./part1_C &&
+g++ part1_D.cpp -o part1_D && ./part1_D &&
 #
-# echo "Compiling and running ising model with scaling"
-# g++ Ising_Scaling.cpp -o Ising_scaling && ./Ising_scaling &&
-# Plotting: Shows 3 sets of 4 plots, first set corresponds to B1, 2nd set corresponds to B2 and 3rd corresponds to B2 with kick
-# Need to close each set of 4 for the next set to show up
-# Not all plots are shown in the assignment report but they are all in the code for completeness
-# Plots do not save automatically, have to manually save if you want
-# echo "Generating plots for first question..."
-# python3 plotting.py
-# #
-# #
-# echo "Generating plots for second question..."
-# python3 plotting_scaling.py
+python3 plotting_part1.py
 #
 echo "All tasks completed!"
 

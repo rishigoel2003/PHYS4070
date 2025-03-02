@@ -12,6 +12,7 @@ using ComplexVector = vector<Complex>;
 
 
 
+
 int main() {
     // Parameters
     const double L = 20.0;              // Domain size
@@ -20,7 +21,7 @@ int main() {
     const double dt = 0.01;             // Time step
     const double tMax = 10.0;           // Maximum simulation time
     const int numSteps = tMax / dt;     // Number of time steps
-    const double g = -1.0;              // Interaction strength (attractive)
+    const double g = -1;              // Interaction strength (attractive)
     const int saveInterval = 10;       // Save data every saveInterval steps
     
     vector<double> x = initialise_grid(N, L, dx);
@@ -32,12 +33,17 @@ int main() {
     double sigma = 1;                 // Width
     double x0 = 0;                    // Center
     double k0 = 0;                    // Initial momentum
-    
-    gaussian(psi, x, A, sigma, x0, k0, N, dx);
+    double B=1;
+    double C=1;
+    double u=0.1;
+    double theta = 1.7;
 
+    // gaussian(psi,x,A,sigma,x0,k0,N,dx);
+    // soliton(psi,x,A,B,C,N,L,dx);
+    solitons(psi,x,u,theta,N,L,dx);
     
     // Output initial state
-    ofstream outFile("nlse_evolution.dat");
+    ofstream outFile("nlse_evolution_solitons.dat");
     if (!outFile) {
         cerr << "Failed to open output file." << endl;
         return 1;
@@ -63,7 +69,7 @@ int main() {
             double currentTime = step * dt;
             double currentNorm = calculateNorm(psi, dx);
             
-            cout << "Time: " << currentTime << ", Norm: " << currentNorm << endl;
+            // cout << "Time: " << currentTime << ", Norm: " << currentNorm << endl;
             
             // Save wavefunction
             for (int i = 0; i < N; ++i) {
@@ -75,7 +81,7 @@ int main() {
     }
     
     outFile.close();
-    cout << "Simulation completed. Results saved to 'nlse_evolution.dat'." << endl;
+    cout << "Simulation completed." << endl;
     
     return 0;
 }

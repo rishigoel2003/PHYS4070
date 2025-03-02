@@ -11,7 +11,18 @@ using namespace std;
 using Complex = complex<double>;
 using ComplexVector = vector<Complex>;
 
+const double pi = acos(-1);
 
+
+
+// Calculate the norm of the wavefunction (should be conserved)
+double calculateNorm(const ComplexVector& psi, double dx) {
+    double norm_val = 0.0;
+    for (const auto& val : psi) {
+        norm_val += norm(val);
+    }
+    return norm_val * dx;
+}
 
 
 // Function to calculate the right-hand side of the Schrödinger equation
@@ -64,18 +75,17 @@ ComplexVector rungeKutta4(const ComplexVector& psi, double dt, double dx, double
     for (int i = 0; i < N; ++i) {
         psiNew[i] = psi[i] + dt * (k1[i] + 2.0*k2[i] + 2.0*k3[i] + k4[i]) / 6.0;
     }
+
+    // Normalize the wavefunction, shouldnt be necessary as SE retains normalisation
+    // but doing it just in case RK4 numerically builds up error over time
+    double norm = calculateNorm(psiNew, dx);
+    for (int i = 0; i < N; ++i) {
+        psiNew[i] /= sqrt(norm);
+    }
     
     return psiNew;
 }
 
-// Calculate the norm of the wavefunction (should be conserved)
-double calculateNorm(const ComplexVector& psi, double dx) {
-    double norm_val = 0.0;
-    for (const auto& val : psi) {
-        norm_val += norm(val);
-    }
-    return norm_val * dx;
-}
 
 // Function to initialise gaussian pulse
 void gaussian(ComplexVector& psi, vector<double> x, double A, double sigma, double x0, double k0, int N, double dx) {
@@ -94,12 +104,13 @@ void gaussian(ComplexVector& psi, vector<double> x, double A, double sigma, doub
     
 }
 
-// Initial condition: Bright soliton solution
-void soliton(ComplexVector& psi, vector<double> x, double A, double B, double C, int N, int L, double dx) {
+
+// Initial condition: Plane Wave
+void plane_wave(ComplexVector& psi, vector<double> x, int N, int L, double dx) {
     
     for (int i = 0; i < N; ++i) {
         
-        psi[i] = A * cosh(B * x[i]) * exp(Complex(0, C * x[i]));
+        psi[i] = sqrt(2)*cos(pi*x[i]/L);
     }
 
     // Normalize the wavefunction
@@ -107,7 +118,37 @@ void soliton(ComplexVector& psi, vector<double> x, double A, double B, double C,
     for (int i = 0; i < N; ++i) {
         psi[i] /= sqrt(initialNorm);
     }
+}
+
+
+// Initial condition: Wave Packet
+void wave_packet(ComplexVector& psi, vector<double> x, double u, int N, int L, double dx) {
     
+    for (int i = 0; i < N; ++i) {
+        
+        psi[i] = sqrt(2)*1/cosh(x[i])*exp(complex(0.0,1.0)*u*x[i]);
+    }
+
+    // Normalize the wavefunction
+    double initialNorm = calculateNorm(psi, dx);
+    for (int i = 0; i < N; ++i) {
+        psi[i] /= sqrt(initialNorm);
+    }
+}
+
+// Initial condition: 2 Solitons
+void solitons(ComplexVector& psi, vector<double> x, double u, double theta, int N, int L, double dx) {
+    
+    for (int i = 0; i < N; ++i) {
+        
+        psi[i] = sqrt(2)*1/cosh(x[i]+ L/4)*exp(complex(0.0,1.0)*u*x[i]) + sqrt(2)*1/cosh(x[i] - L/4)*exp(-complex(0.0,1.0)*u*x[i] + complex(0.0,1.0)*theta);
+    }
+
+    // Normalize the wavefunction
+    double initialNorm = calculateNorm(psi, dx);
+    for (int i = 0; i < N; ++i) {
+        psi[i] /= sqrt(initialNorm);
+    }
 }
 
 
