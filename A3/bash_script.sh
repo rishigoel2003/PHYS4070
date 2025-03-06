@@ -1,0 +1,1 @@
+g++ hydrogen_like.cpp -o hydrogen && ./hydrogen

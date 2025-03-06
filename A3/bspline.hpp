@@ -48,6 +48,10 @@ std::vector<Real> uniform(Real first, Real last, int number) {
 
 } // namespace Range
 
+
+
+
+
 //******************************************************************************
 class BSpline {
 
@@ -171,3 +175,9 @@ private:
     return w1 * bki(k - 1, i, x) + (1.0 - w2) * bki(k - 1, i + 1, x);
   }
 };
+
+
+
+
+
+

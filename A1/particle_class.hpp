@@ -37,7 +37,7 @@ Vector operator-(const Vector &a, const Vector &b) {
     return {a[0] - b[0], a[1] - b[1]};
 }
 
-// Dot product overload
+// Dot product overload, I guess its not really an overload as its actually just a function
 double dot(const Vector &a, const Vector &b) {
     return a[0] * b[0] + a[1] * b[1];
 }
