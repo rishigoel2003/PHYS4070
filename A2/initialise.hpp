@@ -20,8 +20,8 @@ void initializeLattice(vector<vector<int>>& lattice) {
 
     for (int i = 0; i < L; i++) {
         for (int j = 0; j < L; j++) {
-            //want to do a 75 percent bias to one of the spins so we avoid the 50/50 split local minima
-            lattice[i][j] = (dist(gen) < 0.75) ? 1 : -1; //ternary operator for if else (if 1 do 1, if 0 do -1)
+            //want to do a 85 percent bias to one of the spins so we avoid the 50/50 split local minima
+            lattice[i][j] = (dist(gen) < 0.85) ? 1 : -1; //ternary operator for if else (if 1 do 1, if 0 do -1)
         }
     }
 }

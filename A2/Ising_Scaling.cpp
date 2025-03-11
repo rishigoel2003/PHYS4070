@@ -22,6 +22,8 @@ int main() {
     random_device randDevice;
     mt19937 gen(randDevice());
 
+    double B=0; //magnetic field
+
     vector<int> sizes = {8,16,32,64};
 
     int number_sizes = size(sizes);
@@ -29,13 +31,14 @@ int main() {
     for (int l=0;l<number_sizes;l++){
     
         int L = sizes[l];
+        int N = pow(L,2);
 
         
         vector<vector<int>> lattice(L, vector<int>(L));
 
         initializeLattice(lattice);
 
-        int numTemperatures = 50;
+        int numTemperatures = 30;
         double minTemp = 0.3; // Avoiding T=0 for stability
         double maxTemp = 5.0;
 
@@ -57,13 +60,11 @@ int main() {
             cout << "Running simulation at T = " << Temperature << ", L = " << L << endl;
             
             
-            int sweeps = 1000; // Number of iterations
+            int sweeps = 2000; // Number of iterations
             
 
-
-
             // Run simulation
-            for (int i = 0; i < sweeps*pow(L,2); i++) {
+            for (int i = 0; i < sweeps*N; i++) {
                 
             
 
@@ -75,7 +76,7 @@ int main() {
                 int randomCol = distrib(gen);
                 
                 // Calculate energy change if this spin is flipped
-                double deltaE = calculateDeltaE(lattice, randomRow, randomCol);
+                double deltaE = calculateDeltaE(lattice, randomRow, randomCol, B);
                 
                 
                 uniform_real_distribution<double> dist(0.0, 1.0);
@@ -90,9 +91,10 @@ int main() {
                 }
                 
 
-                if (i >= (sweeps/2)*pow(L,2) && i % (L*L) == 0) {
+                if (i >= (sweeps/2)*N && i % (L*L) == 0)//condition found from part 1 (1000 sweeps for burn in and 1000 for average)
+                {
                     // Take measurements here
-                    output_file << i/(L*L) << " "<< L << " " << Temperature << " " << energy/pow(L,2) << " " << magnetisation/pow(L,2) << "\n";
+                    output_file << i/(N) << " "<< L << " " << Temperature << " " << energy/N << " " << magnetisation/N << "\n";
                 }
 
         }

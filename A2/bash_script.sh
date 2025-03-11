@@ -1,31 +1,38 @@
 set -e  # Exit on error
-#
-#
+# #
+# #
 # Compile and run question B1
 echo "Compiling and running ising model"
-g++ Ising_Basic.cpp -o Ising && ./Ising &&
+g++ IsingB1.cpp -o B1 && ./B1 &&
 #
 echo "Compiling and running ising model with scaling"
 g++ Ising_Scaling.cpp -o Ising_scaling && ./Ising_scaling &&
 #
+echo "Compiling and running ising model with applied mag field"
+g++ Ising_AppliedB.cpp -o Ising_AppliedB && ./Ising_AppliedB &&
 #
 echo "Compiling and running ising model for power laws"
 g++ Ising_Power_Laws.cpp -o Ising_Power_Laws && ./Ising_Power_Laws &&
 #
+#
+#
 echo "Generating plots for first question..."
-python3 plotting.py
+python3 B1.py
 #
 #
 echo "Generating plots for second question..."
 python3 plotting_scaling.py
 #
 echo "Generating plots for third question..."
+python3 plotting_AppliedB.py
+#
+echo "Generating plots for fourth question..."
 python3 plotting_power.py
 #
 #
 #
 #
-#
+rm -f IsingParallel.txt
 # Output file for timing results
 OUTPUT_FILE="timing_results.txt"
 # Clear previous results
@@ -44,8 +51,8 @@ do
 #   echo "Completed run with $threads threads: $time_value seconds"
 done
 #plotting for the parallelisation question using OpenMP
-echo "Generating plots for OpenMP question..."
-python3 plot_times.py
+# echo "Generating plots for OpenMP question..."
+# python3 plot_times.py
 #
 #
 #

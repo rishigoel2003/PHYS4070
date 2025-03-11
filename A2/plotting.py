@@ -38,7 +38,7 @@ for temp in temperatures:
 
 
 # Create figure with two subplots
-plt.figure(figsize=(12, 5))
+plt.figure(figsize=(12, 5),num=1)
 
 
 
@@ -113,7 +113,7 @@ print(f"Estimated critical temperature: {critical_temp:.3f}")
 print(f"Theoretical critical temperature: 2.269")
 
 # Plot specific heat
-plt.figure(figsize=(8, 5))
+plt.figure(figsize=(8, 5),num=1)
 plt.plot(temperatures, specific_heat, 'o-')
 plt.axvline(x=critical_temp, color='r', linestyle='--', 
             label=f'Estimated critical T ≈ {critical_temp:.3f}')
@@ -140,7 +140,7 @@ for temp in temperatures:
 
 
 
-plt.figure(figsize=(8, 5))
+plt.figure(figsize=(8, 5),num=1)
 plt.plot(temperatures, susceptibility, 'o-')
 plt.axvline(x=critical_temp, color='r', linestyle='--', 
             label=f'Estimated critical T ≈ {critical_temp:.3f}')

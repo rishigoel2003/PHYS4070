@@ -19,6 +19,7 @@ using namespace std;
 // Main function
 int main() {
     int L = 16;
+    double B=0;
 
     
     vector<vector<int>> lattice(L, vector<int>(L));
@@ -67,7 +68,7 @@ int main() {
             int randomCol = distrib(gen);
             
             // Calculate energy change if this spin is flipped
-            double deltaE = calculateDeltaE(lattice, randomRow, randomCol);
+            double deltaE = calculateDeltaE(lattice, randomRow, randomCol,B);
             
             // Decide whether to flip the spin based on the Metropolis algorithm
             if (deltaE <= 0 || (exp(-deltaE/Temperature) >= dist(gen))) {

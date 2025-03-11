@@ -32,7 +32,7 @@ int main() {
 
 
     double dt = 0.0001;  // Time step
-    int steps = 4000000; // Number of iterations
+    int steps = 8000000; // Number of iterations
 
     double moon_proj_distance = 0;
 

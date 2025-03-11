@@ -43,7 +43,7 @@ int main() {
         
         //update distance
         moon_proj_distance = sqrt(pow((moon.r[0]- projectile.r[0]),2) + pow((moon.r[1]- projectile.r[1]),2));
-        const double epsilon = 1e-4; // Small tolerance
+        const double epsilon = 5e-5; // Small tolerance
 
         //check if the moon is within some small tolerance of 0.5 radius
         if (fabs(moon_proj_distance - 0.5) < epsilon) {

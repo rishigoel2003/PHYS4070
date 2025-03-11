@@ -12,7 +12,7 @@
 using namespace std;
 
 
-double calculateDeltaE(const vector<vector<int>>& lattice, int row, int col) {
+double calculateDeltaE(const vector<vector<int>>& lattice, int row, int col,double B) {
     int L = lattice.size();
     int spin = lattice[row][col];
     
@@ -26,8 +26,10 @@ double calculateDeltaE(const vector<vector<int>>& lattice, int row, int col) {
     int sum_neighbors = top + bottom + left + right;
     
     // Energy change if we flip this spin
-    return 2 * spin * sum_neighbors;
+    return 2 * spin * (sum_neighbors + B);
 }
+
+
 
 
 

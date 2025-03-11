@@ -18,16 +18,18 @@ using namespace std;
 
 // Main function
 int main() {
-    int L = 64;
+    int L = 128;
+    double B=0;
+    int N = pow(L,2);
 
     
     vector<vector<int>> lattice(L, vector<int>(L));
 
     initializeLattice(lattice);
 
-    int numTemperatures = 15;
-    double minTemp = 2; // Avoiding T=0 for stability
-    double maxTemp = 2.269;
+    int numTemperatures = 30;
+    double minTemp = 2.1; // 
+    double maxTemp = 2.26;
 
 
     double energy = ComputeInitialEnergy(lattice);
@@ -50,7 +52,7 @@ int main() {
         cout << "Running simulation at T = " << Temperature << endl;
         
         
-        int sweeps = 3000; // Number of iterations
+        int sweeps = 10000; // Number of iterations
         
 
 
@@ -67,7 +69,7 @@ int main() {
             int randomCol = distrib(gen);
             
             // Calculate energy change if this spin is flipped
-            double deltaE = calculateDeltaE(lattice, randomRow, randomCol);
+            double deltaE = calculateDeltaE(lattice, randomRow, randomCol,B);
             
             // Decide whether to flip the spin based on the Metropolis algorithm
             if (deltaE <= 0 || (exp(-deltaE/Temperature) >= dist(gen))) {
@@ -80,9 +82,9 @@ int main() {
             }
             
 
-            if (i >= (sweeps/2)*pow(L,2) && i % (L*L) == 0) {
+            if (i >= (3*sweeps/4)*N && i % 10*N == 0) {
                 // Take measurements here
-                output_file << i/(L*L) << " " << Temperature << " " << energy/pow(L,2) << " " << magnetisation/pow(L,2) << "\n";
+                output_file << i/N << " " << Temperature << " " << energy/N << " " << magnetisation/N << "\n";
             }
 
     }

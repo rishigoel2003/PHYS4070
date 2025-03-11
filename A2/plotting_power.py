@@ -9,6 +9,8 @@ data = pd.read_csv('IsingPower.txt', sep=' ', names=['index', 'temperature', 'en
 # Get unique temperatures and lengths
 temperatures = np.sort(data['temperature'].unique())
 
+length=128
+
 avg_mag = []
 sem_mag = []
 
@@ -34,7 +36,7 @@ susceptibility = []
 for temp in temperatures:
     temp_data = data[data['temperature'] == temp]
     mag_values = np.abs(temp_data['magnetization']) 
-    susceptibility.append(np.var(mag_values) *16**2 / temp)
+    susceptibility.append(np.var(mag_values) *length**2 / temp)
 
 susceptibility = np.array(susceptibility)
 
@@ -96,8 +98,8 @@ ax2.grid(True, alpha=0.3, which="both")
 ax2.legend()
 
 plt.tight_layout()
-plt.savefig('Plots/2.2_B.png', dpi=300)
-plt.show()
+plt.savefig('Plots/B2_5.png', dpi=300)
+# plt.show()
 
 # Print the results and comparison with theory
 print(f"Magnetization critical exponent (β):")
