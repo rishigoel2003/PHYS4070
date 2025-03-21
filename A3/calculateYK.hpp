@@ -3,7 +3,6 @@
 #include <cmath>
 #include <vector>
 
-namespace YK {
 
 //******************************************************************************
 /*!
@@ -51,4 +50,3 @@ inline std::vector<double> ykab(int k, const std::vector<double> &Pa,
   return y;
 }
 
-} // namespace YK

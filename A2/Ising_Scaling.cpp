@@ -24,10 +24,11 @@ int main() {
 
     double B=0; //magnetic field
 
-    vector<int> sizes = {8,16,32,64};
+    vector<int> sizes = {8,16,32,64}; //lattice sizes
 
     int number_sizes = size(sizes);
 
+    //loop over sizes
     for (int l=0;l<number_sizes;l++){
     
         int L = sizes[l];
@@ -38,6 +39,7 @@ int main() {
 
         initializeLattice(lattice);
 
+        //temperatures
         int numTemperatures = 30;
         double minTemp = 0.3; // Avoiding T=0 for stability
         double maxTemp = 5.0;
@@ -49,10 +51,7 @@ int main() {
 
         // printLattice(lattice);
 
-        
-        
-
-
+        //loop over temperatures
         for (int tempIndex = 0; tempIndex < numTemperatures; tempIndex++) {
             // Calculate current temperature
             double Temperature = minTemp + tempIndex * (maxTemp - minTemp) / (numTemperatures - 1);
@@ -65,9 +64,6 @@ int main() {
 
             // Run simulation
             for (int i = 0; i < sweeps*N; i++) {
-                
-            
-
 
                 // Choose a random position in the lattice
                 

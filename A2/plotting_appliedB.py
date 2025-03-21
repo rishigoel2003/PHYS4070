@@ -24,16 +24,9 @@ for mag in mags:
     for temp in temperatures:
         # Get data for this temperature and length
         temp_data = data[(data['temperature'] == temp) & (data['B'] == mag)]
+        avg_energy.append(np.mean(temp_data['energy']))
+        sem_energy.append(stats.sem(temp_data['energy']))
         
-        if not temp_data.empty:
-            # Calculate average and standard error
-            avg_energy.append(np.mean(temp_data['energy']))
-            sem_energy.append(stats.sem(temp_data['energy']))
-        else:
-            # Handle missing data points
-            avg_energy.append(np.nan)
-            sem_energy.append(np.nan)
-    
     # Plot energy for this length
     plt.errorbar(temperatures, avg_energy, yerr=sem_energy, fmt='o-', capsize=3, 
                  label=f'B = {float(mag)}')
@@ -116,14 +109,12 @@ for B in mags:
     specific_heat = []
     
     for temp in temperatures:
+        #take data
         temp_data = data[(data['temperature'] == temp) & (data['B'] == B)]
-        
-        if not temp_data.empty:
-            energy_variance = np.var(temp_data['energy'])
-            specific_heat.append(energy_variance *16**2 / (temp ** 2))
-        else:
-            specific_heat.append(np.nan)
-    
+        energy_variance = np.var(temp_data['energy'])
+        specific_heat.append(energy_variance *16**2 / (temp ** 2))
+
+
     plt.plot(temperatures, specific_heat, 'o-', label=f'B = {float(B)}')
 
 plt.axvline(x=2.269, color='k', linestyle='--', 
@@ -133,6 +124,9 @@ plt.ylabel('Specific Heat')
 plt.title('Specific Heat vs Temperature')
 plt.legend()
 plt.grid(True, alpha=0.3)
+
+
+
 
 # Plot susceptibility for each lattice size
 plt.subplot(1, 2, 2)
@@ -152,6 +146,7 @@ for B in mags:
     
     plt.plot(temperatures, susceptibility, 'o-', label=f'B = {float(B)}')
 
+#vertical line
 plt.axvline(x=2.269, color='k', linestyle='--', 
             label=f'Theoretical critical T = 2.269')
 plt.xlabel('Temperature')

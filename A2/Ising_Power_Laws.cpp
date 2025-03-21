@@ -18,7 +18,8 @@ using namespace std;
 
 // Main function
 int main() {
-    int L = 128;
+    // large lattice size required for this part
+    int L = 256;
     double B=0;
     int N = pow(L,2);
 
@@ -27,9 +28,10 @@ int main() {
 
     initializeLattice(lattice);
 
-    int numTemperatures = 30;
-    double minTemp = 2.1; // 
-    double maxTemp = 2.26;
+    //lots of temperatures required to reproduce power laws
+    int numTemperatures = 100;
+    double minTemp = 2; // 
+    double maxTemp = 2.27;
 
 
     double energy = ComputeInitialEnergy(lattice);
@@ -52,13 +54,13 @@ int main() {
         cout << "Running simulation at T = " << Temperature << endl;
         
         
-        int sweeps = 10000; // Number of iterations
+        int sweeps = 2000; // Number of iterations
         
 
 
 
         // Run simulation
-        for (int i = 0; i < sweeps*pow(L,2); i++) {
+        for (int i = 0; i < sweeps*N; i++) {
             
         
 
@@ -82,7 +84,7 @@ int main() {
             }
             
 
-            if (i >= (3*sweeps/4)*N && i % 10*N == 0) {
+            if (i >= (5*sweeps/10)*N && i % (5*N) == 0) {
                 // Take measurements here
                 output_file << i/N << " " << Temperature << " " << energy/N << " " << magnetisation/N << "\n";
             }

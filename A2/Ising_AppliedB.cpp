@@ -22,11 +22,12 @@ int main() {
     random_device randDevice;
     mt19937 gen(randDevice());
 
-
+    // vector of the magnetisations we wish to test (only positive as we would just get the same observables for negative magnetisations)
     vector<double> mags = {0,0.1,0.2,0.3,0.4,0.5};
 
     int number_B = size(mags);
 
+    // loop over mags
     for (int b=0;b<number_B;b++){
     
         int L = 16;
@@ -53,7 +54,7 @@ int main() {
         
         
 
-
+        // loop over temps
         for (int tempIndex = 0; tempIndex < numTemperatures; tempIndex++) {
             // Calculate current temperature
             double Temperature = minTemp + tempIndex * (maxTemp - minTemp) / (numTemperatures - 1);
@@ -61,7 +62,7 @@ int main() {
             cout << "Running simulation at T = " << Temperature << ", B = " << B << endl;
             
             
-            int sweeps = 2000; // Number of iterations
+            int sweeps = 2000; // Number of sweeps
             
 
             // Run simulation

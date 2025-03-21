@@ -8,8 +8,10 @@ data = pd.read_csv('IsingPower.txt', sep=' ', names=['index', 'temperature', 'en
 
 # Get unique temperatures and lengths
 temperatures = np.sort(data['temperature'].unique())
+temperatures = temperatures[temperatures < 2.25]  # Only temps < 2.25 for magnetization as empirically found
 
-length=128
+#
+length = 256
 
 avg_mag = []
 sem_mag = []
@@ -19,7 +21,7 @@ for temp in temperatures:
     # Get data for this temperature and length
     temp_data = data[(data['temperature'] == temp)]
     
-    if not temp_data.empty:
+    if (not temp_data.empty):
         # For magnetization, use absolute values to handle phase symmetry
         mag_values = np.abs(temp_data['magnetization'])
         avg_mag.append(np.mean(mag_values))
@@ -31,14 +33,16 @@ avg_mag = np.array(avg_mag)
 sem_mag = np.array(sem_mag)
 temp_diff = np.abs(temperatures - 2.269)  # Distance from critical temperature
 
-# Calculate susceptibility
+# Calculate susceptibility (only for temps < 2.2)
+temps_for_susceptibility = temperatures[temperatures < 2.2]
 susceptibility = []
-for temp in temperatures:
+for temp in temps_for_susceptibility:
     temp_data = data[data['temperature'] == temp]
     mag_values = np.abs(temp_data['magnetization']) 
-    susceptibility.append(np.var(mag_values) *length**2 / temp)
+    susceptibility.append(np.var(mag_values) * length**2 / temp)
 
 susceptibility = np.array(susceptibility)
+temp_diff_sus = np.abs(temps_for_susceptibility - 2.269)  # Distance from critical temperature
 
 # Create a figure with two subplots
 fig, (ax1, ax2) = plt.subplots(1, 2, figsize=(14, 6))
@@ -73,16 +77,16 @@ ax1.grid(True, alpha=0.3, which="both")
 ax1.legend()
 
 # Filter for susceptibility plot
-valid_sus_indices = (susceptibility > 0) & (temp_diff > 0)
-x_sus = np.log10(temp_diff[valid_sus_indices])
+valid_sus_indices = (susceptibility > 0) & (temp_diff_sus > 0)
+x_sus = np.log10(temp_diff_sus[valid_sus_indices])
 y_sus = np.log10(susceptibility[valid_sus_indices])
 
 # Perform linear regression for susceptibility
 slope_sus, intercept_sus, r_value_sus, p_value_sus, std_err_sus = stats.linregress(x_sus, y_sus)
 
 # Plot susceptibility data and regression line
-ax2.scatter(temp_diff[valid_sus_indices], susceptibility[valid_sus_indices], marker='o', label='Simulation Data')
-x_line = np.logspace(np.log10(min(temp_diff[valid_sus_indices])), np.log10(max(temp_diff[valid_sus_indices])), 100)
+ax2.scatter(temp_diff_sus[valid_sus_indices], susceptibility[valid_sus_indices], marker='o', label='Simulation Data')
+x_line = np.logspace(np.log10(min(temp_diff_sus[valid_sus_indices])), np.log10(max(temp_diff_sus[valid_sus_indices])), 100)
 y_line = 10**intercept_sus * x_line**slope_sus
 ax2.loglog(x_line, y_line, 'r-', label=f'Fit: γ = {-slope_sus:.3f}±{std_err_sus:.3f}')
 
@@ -101,7 +105,7 @@ plt.tight_layout()
 plt.savefig('Plots/B2_5.png', dpi=300)
 # plt.show()
 
-# Print the results and comparison with theory
+# Print the results and comparison with theory for analysis (this was so i can try lots of different things to get the best fitted data)
 print(f"Magnetization critical exponent (β):")
 print(f"  Measured: {slope_mag:.4f} ± {std_err_mag:.4f}")
 print(f"  Theoretical: {beta_theory:.4f}")

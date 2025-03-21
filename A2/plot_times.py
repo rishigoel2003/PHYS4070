@@ -1,4 +1,8 @@
+
+
+import numpy as np
 import matplotlib.pyplot as plt
+from scipy import stats
 import pandas as pd
 
 # Read the timing results
@@ -14,7 +18,7 @@ plt.ylabel('Execution Time (seconds)')
 plt.title('Ising Model Simulation: Execution Time vs Number of Threads')
 plt.grid(True)
 
-# Add log2 scale for x-axis since we're using powers of 2
+# Add log2 scale for x-axis since we're using powers of 2 for num threads
 plt.xscale('log', base=2)
 plt.xticks(data['Threads'], data['Threads'])
 plt.savefig('Plots/B3_2.png', dpi=300)
@@ -46,11 +50,6 @@ plt.savefig('Plots/B3_2.png', dpi=300)
 
 
 
-
-import numpy as np
-import matplotlib.pyplot as plt
-from scipy import stats
-import pandas as pd
 
 # Load the data
 data = pd.read_csv('IsingParallel.txt', sep=' ', names=['index', 'threads', 'temperature', 'energy', 'magnetization'])

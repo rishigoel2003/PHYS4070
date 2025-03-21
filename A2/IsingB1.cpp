@@ -1,3 +1,4 @@
+//packages
 #include <iostream>
 #include <array>
 #include <cmath>
@@ -5,12 +6,15 @@
 #include <fstream>
 #include <vector>
 
+// making the output file which we save data to
 std::ofstream output_file("IsingB1.txt");
 
+// i know im not meant to do this but it makes it easier for me to code cout
 using namespace std;
 
 #include <random>
 
+//helper functions and initialising matrix
 #include "initialise.hpp"
 #include "functions.hpp"
 
@@ -18,11 +22,12 @@ using namespace std;
 
 // Main function
 int main() {
+    //params
     int L = 16;
     double B = 0;
     int N = pow(L,2);
 
-    
+    //making and initialising lattice with energy and magnetisation and printing it out
     vector<vector<int>> lattice(L, vector<int>(L));
 
     initializeLattice(lattice);
@@ -34,8 +39,10 @@ int main() {
     double magnetisation = computeInitialMagnetization(lattice);
     cout << "Initial energy: " << energy << " Initial Magnetisation: " << magnetisation << endl; 
 
+    // can print out if you want
     // printLattice(lattice);
 
+    //making mercer twin random generator
     random_device rd;
     mt19937 gen(rd());
     
@@ -54,33 +61,32 @@ int main() {
     for (int i = 0; i < sweeps*N; i++) {
 
 
-        // Choose a random position in the lattice
-        
+        // choose a random position in the lattice
         int randomRow = distrib(gen);
         int randomCol = distrib(gen);
         
-        // Calculate energy change if this spin is flipped
+        // calculate energy change if this spin is flipped
         double deltaE = calculateDeltaE(lattice, randomRow, randomCol, B);
         
-        // Decide whether to flip the spin based on the Metropolis algorithm
+        // decide whether to flip the spin based on the Metropolis algorithm (energy less than 0 or with probability e^-dE/T)
         if (deltaE <= 0 || (exp(-deltaE/Temperature) >= dist(gen))) {
             // Flip the spin
             lattice[randomRow][randomCol] *= -1;
             // Update energy
             energy += deltaE;
-            //update magnetisation
+            //update magnetisation (this is because the magnetisation is independent of the neighbours its just the sum of spins)
             magnetisation += 2.0*lattice[randomRow][randomCol];
         }
         
 
         if (i % (L*L) == 0) {
-            // Take measurements here
+            // Take measurements here (i.e. at the end of each sweep)
             output_file << i/(L*L) << " " << Temperature << " " << energy/N << " " << magnetisation/N << "\n";
         }
     
     }
     
-
+    //output details so i know its done
     cout << "B1 algorithm finished\n";
 
     printLattice(lattice);

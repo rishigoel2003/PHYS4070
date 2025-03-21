@@ -1,6 +1,11 @@
 set -e  # Exit on error
 # #
 # #
+#making a plots folder for the plots to go into
+if [ ! -d "Plots" ]; then
+  mkdir -p Plots
+  echo "Created Plots directory"
+fi
 # Compile and run question B1
 echo "Compiling and running ising model"
 g++ IsingB1.cpp -o B1 && ./B1 &&
@@ -32,27 +37,28 @@ python3 plotting_power.py
 #
 #
 #
+#delete this file so we can remake it and add data to it fresh
 rm -f IsingParallel.txt
 # Output file for timing results
 OUTPUT_FILE="timing_results.txt"
-# Clear previous results
+# put in header to file
 echo "Threads,Time" > $OUTPUT_FILE
-# Compile the program
+# Compile the program with openmp
 g++ Ising_Parallel.cpp -o parallel -fopenmp
 # Run with different thread counts
 for threads in 1 2 4 8 16
 do
   echo "Running with $threads threads..."
   export OMP_NUM_THREADS=$threads
-  # Run the program and capture the time output directly
+  # Run the program and capture the time output directly as we are only outputting a single value which is the time
   time_value=$(./parallel)
   # Append to results file
   echo "$threads,$time_value" >> $OUTPUT_FILE
-#   echo "Completed run with $threads threads: $time_value seconds"
+  echo "Completed run with $threads threads: $time_value seconds"
 done
 #plotting for the parallelisation question using OpenMP
-# echo "Generating plots for OpenMP question..."
-# python3 plot_times.py
+echo "Generating plots for OpenMP question..."
+python3 plot_times.py
 #
 #
 #

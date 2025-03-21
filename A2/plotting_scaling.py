@@ -99,7 +99,10 @@ plt.grid(True, alpha=0.3)
 
 plt.tight_layout()
 plt.savefig('Plots/B2_1.png', dpi=300)
-plt.show()
+# plt.show()
+
+
+
 
 
 
@@ -162,7 +165,7 @@ plt.grid(True, alpha=0.3)
 
 plt.tight_layout()
 plt.savefig('Plots/B2_2.png', dpi=300)
-plt.show()
+# plt.show()
 
 
 

@@ -1,8 +1,0 @@
-N	Matrix Size	Execution Time (ms)
-2	4	14
-3	8	0
-4	16	0
-5	32	1
-6	64	6
-7	128	35
-8	256	134
