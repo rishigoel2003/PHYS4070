@@ -154,7 +154,7 @@ plt.title('Hydrogen-like Atom Radial Probability Densities (Z=3)', fontsize=14)
 plt.legend(fontsize=10)
 
 # Set reasonable x-axis limit (adjust based on your data)
-plt.xlim(0, 10)
+plt.xlim(0, 15)
 
 # Add grid for better readability
 plt.grid(True, alpha=0.3)
@@ -162,40 +162,3 @@ plt.grid(True, alpha=0.3)
 # Save the figure
 plt.savefig('Plots/B1_3', dpi=300)
 # plt.show()
-
-# # Create a second plot with a zoomed-in view to see details near the origin
-# plt.figure(figsize=(10, 6))
-
-# # Plot the same data with a zoomed x-axis
-# # Plot for l=0, n=1 (ground state)
-# state_data = data[(data['l'] == 0) & (data['n'] == 1)]
-# plt.plot(state_data['r'], state_data['prob_density'], 
-#          label='l=0, n=1 (1s)', color='blue', linewidth=2)
-
-# # Plot for l=0, n=2 (first excited s state)
-# state_data = data[(data['l'] == 0) & (data['n'] == 2)]
-# plt.plot(state_data['r'], state_data['prob_density'], 
-#          label='l=0, n=2 (2s)', color='red', linewidth=2)
-
-# # Plot for l=1, n=2 (first p state)
-# state_data = data[(data['l'] == 1) & (data['n'] == 2)]
-# plt.plot(state_data['r'], state_data['prob_density'], 
-#          label='l=1, n=2 (2p)', color='green', linewidth=2)
-
-# # Add labels and title
-# plt.xlabel('Radial Distance (r)', fontsize=12)
-# plt.ylabel('Radial Probability Density', fontsize=12)
-# plt.title('Hydrogen-like Atom Radial Probability Densities - Zoomed View (Z=3)', fontsize=14)
-
-# # Add legend
-# plt.legend(fontsize=10)
-
-# # Set a zoomed x-axis limit to see details near the origin
-# plt.xlim(0, 5)
-
-# # Add grid for better readability
-# plt.grid(True, alpha=0.3)
-
-# # Save the figure
-# plt.savefig('Plots/Radial_Probability_Density_Zoomed', dpi=300)
-# # plt.show()

@@ -18,11 +18,6 @@ plt.figure(figsize=(10, 6))
 # Plot energy vs iterations for n=1, l=0
 plt.plot(n1_l0_data['iters'], n1_l0_data['energy'], marker='o', linestyle='-', color='red')
 
-# # Theoretical energy value for 1s in atomic units (Hydrogen ground state)
-# theoretical_energy_1s = -0.5  # This is the exact value for hydrogen
-# plt.axhline(y=theoretical_energy_1s, color='blue', linestyle='--', 
-#             label='Theoretical 1s Energy (-0.5 au)')
-
 # Labels and title
 plt.xlabel('Iterations')
 plt.ylabel('Energy (au)')
@@ -37,8 +32,58 @@ plt.tight_layout()
 plt.savefig('Plots/B3_1', dpi=300)
 # plt.show()
 
-print(n1_l0_data['energy'].iloc[-1] - n1_l0_data['energy'].iloc[-2])
 
+
+
+
+
+
+# Load Hartree energy data
+data = pd.read_csv('Hartree_Energy.txt', sep=' ', names=['iters', 'l', 'n', 'energy'])
+
+# Get max iteration
+max_iteration = data['iters'].max()
+
+# Filter data for the final iteration and specific orbitals
+final_iteration_data = data[(data['iters'] == max_iteration) & ((data['n'] == 2) & ((data['l'] == 0) | (data['l'] == 1)))]
+
+# Theoretical energy values for 2s and 2p in atomic units
+theoretical_energies = {'2s': -0.19814, '2p': -0.13023}
+
+# Create figure
+plt.figure(figsize=(10, 6))
+
+# Scatter plot of final energies
+colors = {0: 'green', 1: 'blue'}
+for l_val in [0, 1]:
+    subset = final_iteration_data[final_iteration_data['l'] == l_val]
+    plt.scatter(
+        subset['n'], 
+        subset['energy'], 
+        color=colors[l_val], 
+        s=100, 
+        label=f'Computed Energy (l={l_val})'
+    )
+
+# Plot theoretical values for 2s and 2p
+plt.axhline(y=theoretical_energies['2s'], color='green', linestyle='--', label='Experimental 2s Energy')
+plt.axhline(y=theoretical_energies['2p'], color='blue', linestyle='--', label='Experimental 2p Energy')
+
+# Labels and title
+plt.xlabel('Orbital (n)')
+plt.ylabel('Energy (au)')
+plt.title(f'Orbital Energies at Final Iteration (Iteration {max_iteration})')
+
+# Add legend
+plt.legend()
+
+# Improve readability
+plt.grid(True)
+plt.tight_layout()
+
+# Save figure
+plt.savefig('Plots/B3_2', dpi=300)
+# plt.show()
 
 
 
@@ -111,19 +156,18 @@ plt.plot(state_data['r'], state_data['prob_density'],
 # Add labels and title
 plt.xlabel('Radial Distance (r)', fontsize=12)
 plt.ylabel('Radial Probability Density', fontsize=12)
-plt.title('Hydrogen-like Atom Radial Probability Densities (Z=3)', fontsize=14)
+plt.title('Hartree Radial Probability Densities', fontsize=14)
 
 # Add legend
 plt.legend(fontsize=10)
 
-# Set reasonable x-axis limit (adjust based on your data)
-plt.xlim(0, 35)
+plt.xlim(0, 15)
 
 # Add grid for better readability
 plt.grid(True, alpha=0.3)
 
 # Save the figure
-plt.savefig('Plots/B3_2', dpi=300)
+plt.savefig('Plots/B3_3', dpi=300)
 # plt.show()
 
 
@@ -145,7 +189,7 @@ ground_state_data = data[(data['l'] == 0) & (data['n'] == 1)]
 plt.figure(figsize=(10, 6))
 
 # Get unique iteration values (assuming they start from 0 and go to 19)
-iterations = sorted(ground_state_data['iters'].unique())
+iterations = ground_state_data['iters'].unique()
 
 # Create a colormap for the iterations
 colors = plt.cm.viridis(np.linspace(0, 1, len(iterations)))
@@ -169,7 +213,7 @@ plt.title('Hydrogen-like Atom Radial Probability Density (n=1, l=0, Z=3)\nConver
 plt.legend(fontsize=8, ncol=2)
 
 # Set reasonable x-axis limit (adjust based on your data)
-plt.xlim(0, 35)
+plt.xlim(0, 2)
 
 # Add grid for better readability
 plt.grid(True, alpha=0.3)
@@ -177,6 +221,9 @@ plt.grid(True, alpha=0.3)
 # Save the figure
 plt.savefig('Plots/B3_4', dpi=300)
 # plt.show()
+
+
+
 
 
 
@@ -210,7 +257,7 @@ P_final = final_state['P'].values
 if len(r_values) == len(P_initial) and len(r_values) == len(P_final):
 
     # Calculate the integrand: P_initial * r * P_final
-    integrand = P_initial * r_values * P_final * r_values * r_values * 4.0 * np.pi
+    integrand = P_initial * r_values * P_final
 
     # Perform the integration
     R_ab = np.trapz(integrand, r_values)
@@ -228,50 +275,3 @@ if len(r_values) == len(P_initial) and len(r_values) == len(P_final):
 
 
 
-
-
-# delta = pd.read_csv('Hartree_delta_E.txt', sep=' ', 
-#                    names=['de'])
-
-
-
-# # Load data
-# data = pd.read_csv('Hartree_Energy.txt', sep=' ', names=['iters','l', 'n', 'energy'])
-
-
-# data = data[data['iters'] == 19]
-
-# # Extract relevant columns
-# ls = data['l']
-# ns = data['n']
-# energies = data['energy']
-
-# # Filter for n = 2 only
-# n_2_data = data[data['n'] == 2]
-
-# # Theoretical energy values for 2s and 2p in atomic units
-# theoretical_energies = {'2s': -0.19814, '2p': -0.13023}
-
-# # Plot the data
-# plt.figure(figsize=(8, 5))
-
-# # Plot experimental values for different l values at n=2
-# unique_ls = n_2_data['l'].unique()
-# for l in unique_ls:
-#     l_data = n_2_data[n_2_data['l'] == l]
-#     plt.scatter(l_data['n'], l_data['energy'] + delta['de'][l], label=f'Experimental Energy (l={l})', marker='o')
-
-# # Plot theoretical values for 2s and 2p
-# plt.axhline(y=theoretical_energies['2s'], color='blue', linestyle='--', label='Theoretical 2s Energy')
-# plt.axhline(y=theoretical_energies['2p'], color='green', linestyle='--', label='Theoretical 2p Energy')
-
-# # Labels and title
-# plt.xlabel('Quantum number n')
-# plt.ylabel('Energy (au)')
-# plt.title('Experimental vs. Theoretical Energy for 2s and 2p')
-# plt.legend()
-
-# # Show plot
-# plt.grid(True)
-# plt.savefig('Plots/B3_3', dpi=300)
-# # plt.show()

@@ -67,7 +67,6 @@ MatrixAndVector RealSymmetric(Matrix matrix) {
   int lwork = 6 * dimension;
   std::vector<double> work(static_cast<std::size_t>(lwork)); //making a vector of size lwork
   int info;
-
   // calculate eigenvalues using the DSYEV lapack subroutine
   // on INPUT, 'matrix' is the matrix to invert. After dsyev_ exits, 'matrix'
   // will hold the eigenvectors, and 'result.vector' will hold the eigenvalues
@@ -118,8 +117,8 @@ MatrixAndVector GeneralisedEigenvalue(Matrix A, Matrix B) {
   int info;
   int type = 1;
 
-  // calculate eigenvalues using the DSYEV lapack subroutine
-  // on INPUT, 'matrix' is the matrix to invert. After dsyev_ exits, 'matrix'
+  // calculate eigenvalues using the DSYGV lapack subroutine
+  // on INPUT, 'matrix' is the matrix to invert. After dsygv_ exits, 'matrix'
   // will hold the eigenvectors, and 'result.vector' will hold the eigenvalues
   dsygv_(&type,&jobz, &uplo, &dimension, A.data(), &dimension, B.data(), &dimension,
          result.vector.data(), work.data(), &lwork, &info);
@@ -134,19 +133,19 @@ MatrixAndVector GeneralisedEigenvalue(Matrix A, Matrix B) {
   }
 
 
-  for (int j = 0; j < dimension; ++j) {
-    double norm = 0.0;
-    for (int i = 0; i < dimension; ++i) {
-      norm += result.matrix(i, j) * result.matrix(i, j);
-    }
-    norm = std::sqrt(norm);
+  // for (int j = 0; j < dimension; ++j) {
+  //   double norm = 0.0;
+  //   for (int i = 0; i < dimension; ++i) {
+  //     norm += result.matrix(i, j) * result.matrix(i, j);
+  //   }
+  //   norm = std::sqrt(norm);
     
-    if (norm > 1e-10) {  // Avoid division by very small numbers
-      for (int i = 0; i < dimension; ++i) {
-        result.matrix(i, j) /= norm;
-      }
-    }
-  }
+  //   if (norm > 1e-10) {  // Avoid division by very small numbers
+  //     for (int i = 0; i < dimension; ++i) {
+  //       result.matrix(i, j) /= norm;
+  //     }
+  //   }
+  // }
   
 
 

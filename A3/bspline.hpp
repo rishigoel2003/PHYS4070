@@ -48,16 +48,12 @@ std::vector<Real> uniform(Real first, Real last, int number) {
 
 } // namespace Range
 
-
-
-
-
 //******************************************************************************
 class BSpline {
 
   //****************************************************************************
 private:
-  int K;                 // order of B-splines (have degree K-1)
+  int K;                 // order of B-splines (have degraa K-1)
   int N;                 // Number of B-splines
   double r0;             // First internal knot
   double rmax;           // Last internal knot
@@ -175,9 +171,3 @@ private:
     return w1 * bki(k - 1, i, x) + (1.0 - w2) * bki(k - 1, i + 1, x);
   }
 };
-
-
-
-
-
-

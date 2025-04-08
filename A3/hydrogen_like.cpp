@@ -4,7 +4,6 @@
 #define M_PI 3.14159265358979323846
 #include <fstream>
 #include <vector>
-#include <omp.h>  // Include OpenMP header
 
 using namespace std;
 
@@ -21,9 +20,9 @@ std::ofstream output_file_3("Hydrogen_Like_Probability_Density.txt");
 
 int main() {
 
-    double r0 = 1.0e-3;
-    double rmax = 50.0;
-    int num_steps = 5000;
+    double r0 = 1.0e-6;
+    double rmax = 30.0;
+    int num_steps = 2501;
     int k_order = 7;
     int num_splines = 60;
     // 1. Construct Grid
@@ -53,7 +52,7 @@ int main() {
         std::vector<double> v(num_steps);
         
         for (int i = 0; i< num_steps; ++i){
-            v[i] = -Z/r[i] + l*(l+1)/(2*pow(r[i],2));
+            v[i] = -1*Z/r[i] + l*(l+1)/(2*r[i]*r[i]);
         }
         
 
@@ -66,27 +65,27 @@ int main() {
         // for(auto en : EValues){
         //     std::cout << en <<"\n";
         // }
-        for(std::size_t n=0; n<EValues.size(); ++n){
-            output_file_1 << l << " " << n+1 << " " << -EValues.at(n) <<"\n";
+        for(std::size_t n=l; n<EValues.size(); ++n){
+            output_file_1 << l << " " << n+1 << " " << -EValues.at(n-l) <<"\n";
         }
 
 
         // After I get EVectors and EValues:
-        for(std::size_t n = 0; n < EValues.size(); ++n) {
+        for(std::size_t n = l; n < EValues.size(); ++n) {
             // Reconstruct the wavefunction for this state
             std::vector<double> wavefunction(num_steps, 0.0);
             
             // Combine B-splines with eigenvector coefficients to get the wavefunction
             for (int i = 0; i < num_steps; ++i) {
                 for (int j = 0; j < num_splines; ++j) {
-                    wavefunction[i] += EVectors(n, j) * b_spl[j][i];
+                    wavefunction[i] += EVectors(n-l, j) * b_spl[j][i];
                 }
             }
             
             normalise(wavefunction,num_steps,r,dr);
 
             for (int i = 0; i < num_steps; ++i) {
-                double radial_prob_density = wavefunction[i] * wavefunction[i] * r[i] * r[i] * 4.0 * M_PI;
+                double radial_prob_density = wavefunction[i] * wavefunction[i];
                 output_file_3 << l << " " << n+1 << " " << r[i] << " " << radial_prob_density << "\n";
             }
             
