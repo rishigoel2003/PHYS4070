@@ -5,7 +5,7 @@
 #include <fstream>
 #include <vector>
 
-using namespace std;
+// using namespace std;
 
 #include <random>
 #include "eigen.hpp"
@@ -13,13 +13,15 @@ using namespace std;
 #include "calculateYK.hpp"
 #include "functions.hpp"
 
-std::ofstream output_file_1("Hartree_Energy.txt");
-std::ofstream output_file_2("Hartree_Wavefunctions.txt");
-std::ofstream output_file_3("Hartree_Probability_Density.txt");
 
 
 
 int main() {
+
+    std::ofstream output_file_1("Hartree_Energy.txt");
+    std::ofstream output_file_2("Hartree_Wavefunctions.txt");
+    std::ofstream output_file_3("Hartree_Probability_Density.txt");
+
 
     double r0 = 1.0e-6;
     double rmax = 70.0;
@@ -57,11 +59,11 @@ int main() {
     double energy1s = 0;
     int iterations = 0;
 
-    while (abs(deltaE_1s) >= 1e-6){
+    while (std::abs(deltaE_1s) >= 1e-6){
         ++iterations;
 
 
-        std::cout << "iter = " << iterations << endl;
+        std::cout << "iter = " << iterations << std::endl;
 
         for(int l=0;l<2;++l){
 
@@ -85,13 +87,8 @@ int main() {
                 output_file_1 << iterations << " " << l << " " << n+1 << " " << EValues.at(n-l) <<"\n";
                 std::vector<double> wavefunction(num_steps, 0.0);
                 
-                // Combine B-splines with eigenvector coefficients to get the wavefunction
-                for (int i = 0; i < num_steps; ++i) {
-                    for (int j = 0; j < num_splines; ++j) {
-                        wavefunction[i] += EVectors(n-l, j) * b_spl[j][i];
-                        
-                    }
-                }
+                make_wavefunction(wavefunction, EVectors, b_spl, num_steps, num_splines, n, l);
+
 
                 
                 normalise(wavefunction,num_steps,r,dr);
@@ -124,18 +121,14 @@ int main() {
             }
         }
 
-        cout << "deltaE_1s = " << deltaE_1s << endl;
+        std::cout << "deltaE_1s = " << deltaE_1s << std::endl;
         V_Dir = 2*ykab(0,wave_1s,wave_1s,r);
 
     }
 
 
-    //calculating the decay rate of 2s to 2p transition and then the time it takes to decay
-    double R_ab = integrate(wave_2s, wave_2p, r, r0, dr, num_steps);
-    double omega_ab = 0.06791;
-    
-    double decay_rate = 2 * std::pow(R_ab, 2) * std::pow(omega_ab, 3) / 3 * 1.071e10;
-    double time = std::round((1 / decay_rate * 1e9) * 1e4) / 1e4; // rounding to 4 decimal places
+
+    double time = decay_rate(wave_2s, wave_2p, r, r0, dr, num_steps);
 
     std::cout << "Time (ns): " << time << std::endl;
     

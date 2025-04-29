@@ -24,7 +24,7 @@ Matrix form_B(const std::vector<std::vector<double>>& B_splines, double r0, doub
 
 
 // Overload vector multiplication (vector * vector)
-std::vector<double> operator*(const std::vector<double>& vec1, const std::vector<double>& vec2) {
+inline std::vector<double> operator*(const std::vector<double>& vec1, const std::vector<double>& vec2) {
     std::vector<double> result(vec1.size());
     for (size_t i = 0; i < vec1.size(); ++i) {
         result[i] = vec1[i] * vec2[i];
@@ -36,7 +36,7 @@ std::vector<double> operator*(const std::vector<double>& vec1, const std::vector
 
 
 // Overload scalar multiplication (scalar * vector)
-std::vector<double> operator*(double scalar, const std::vector<double>& vec) {
+inline std::vector<double> operator*(double scalar, const std::vector<double>& vec) {
     std::vector<double> result(vec.size());
     for (size_t i = 0; i < vec.size(); ++i) {
         result[i] = scalar * vec[i];
@@ -45,7 +45,7 @@ std::vector<double> operator*(double scalar, const std::vector<double>& vec) {
 }
 
 // Overload scalar multiplication (vector * scalar)
-std::vector<double> operator*(const std::vector<double>& vec, double scalar) {
+inline std::vector<double> operator*(const std::vector<double>& vec, double scalar) {
     return scalar * vec; // Reuse the previous operator
 }
 
@@ -57,7 +57,7 @@ std::vector<double> operator*(const std::vector<double>& vec, double scalar) {
 
 
 // making B Spline matrix
-std::vector<std::vector<double>> form_Bsplines(double r0, double rmax, int num_steps, int k_order, int num_splines){
+inline std::vector<std::vector<double>> form_Bsplines(double r0, double rmax, int num_steps, int k_order, int num_splines){
    std::vector<std::vector<double>> b(num_splines);
   
    BSpline bspl(k_order, num_splines + 3, r0, rmax);
@@ -76,7 +76,7 @@ std::vector<std::vector<double>> form_Bsplines(double r0, double rmax, int num_s
 
 
 // making the derivative of B Spline matrix
-std::vector<std::vector<double>> form_dBsplines(double r0, double rmax, int num_steps, int k_order, int num_splines){
+inline std::vector<std::vector<double>> form_dBsplines(double r0, double rmax, int num_steps, int k_order, int num_splines){
    std::vector<std::vector<double>> db(num_splines);
   
    BSpline bspl(k_order, num_splines + 3, r0, rmax);
@@ -96,7 +96,7 @@ std::vector<std::vector<double>> form_dBsplines(double r0, double rmax, int num_
 
 
 // Simpson's rule integration for f(r)*g(r)
-double integrate(const std::vector<double> &a, const std::vector<double>&b, double r0, double dr, int num_steps) {
+inline double integrate(const std::vector<double> &a, const std::vector<double>&b, double r0, double dr, int num_steps) {
     // Ensure odd number of steps for Simpson's rule
     if (num_steps % 2 == 0) {
         throw std::invalid_argument("Number of steps must be odd for Simpson's rule");
@@ -126,7 +126,7 @@ double integrate(const std::vector<double> &a, const std::vector<double>&b, doub
 
 
 // Simpson's rule integration for f(r)*g(r)*h(r)
-double integrate(const std::vector<double> &a, const std::vector<double>&b, const std::vector<double>&c, double r0, double dr, int num_steps) {
+inline double integrate(const std::vector<double> &a, const std::vector<double>&b, const std::vector<double>&c, double r0, double dr, int num_steps) {
     // Ensure odd number of steps for Simpson's rule
     if (num_steps % 2 == 0) {
         throw std::invalid_argument("Number of steps must be odd for Simpson's rule");
@@ -156,7 +156,7 @@ double integrate(const std::vector<double> &a, const std::vector<double>&b, cons
 
 
 // Making the Hamiltonian matrix by integrating the B splines and the potential for each term
-Matrix form_H(const std::vector<std::vector<double>>& B_splines, const std::vector<std::vector<double>>& dB_splines, const std::vector<double> &V, double r0, double dr, int num_steps){
+inline Matrix form_H(const std::vector<std::vector<double>>& B_splines, const std::vector<std::vector<double>>& dB_splines, const std::vector<double> &V, double r0, double dr, int num_steps){
     auto Nspl =  B_splines.size();
     Matrix H(Nspl, Nspl);
     // finding each term of H
@@ -176,7 +176,7 @@ Matrix form_H(const std::vector<std::vector<double>>& B_splines, const std::vect
 
 
 //Modified Hamiltonian matrix for Hartree-Fock method
-Matrix form_H_Hartree_Fock(const std::vector<std::vector<double>>& B_splines, const std::vector<std::vector<double>>& dB_splines, const std::vector<double> &V, double r0, double dr, int num_steps
+inline Matrix form_H_Hartree_Fock(const std::vector<std::vector<double>>& B_splines, const std::vector<std::vector<double>>& dB_splines, const std::vector<double> &V, double r0, double dr, int num_steps
     , std::vector<double> wave_1s, std::vector<double> r,int l){
     auto Nspl =  B_splines.size();
     Matrix H(Nspl, Nspl);
@@ -208,7 +208,7 @@ Matrix form_H_Hartree_Fock(const std::vector<std::vector<double>>& B_splines, co
 
 
 //making the B matrix by integrating the B splines (not dirac deltas as they arent normalised and orthogonal)
-Matrix form_B(const std::vector<std::vector<double>>& B_splines, double r0, double dr, int num_steps){
+inline Matrix form_B(const std::vector<std::vector<double>>& B_splines, double r0, double dr, int num_steps){
     auto Nspl =  B_splines.size();
     Matrix B(Nspl, Nspl);
     for(int i = 0; i<Nspl; ++i){
@@ -221,7 +221,7 @@ Matrix form_B(const std::vector<std::vector<double>>& B_splines, double r0, doub
 
 
 
-double calculate_r_expectation(std::vector<double>& r, double dr, 
+inline double calculate_r_expectation(std::vector<double>& r, double dr, 
     const std::vector<double>& wavefunction) {
 
     double expectation = 0.0;
@@ -236,7 +236,7 @@ double calculate_r_expectation(std::vector<double>& r, double dr,
 
 
 
-void normalise(std::vector<double> &wavefunction, const double num_steps, const std::vector<double> r, const double dr){
+inline void normalise(std::vector<double> &wavefunction, const double num_steps, const std::vector<double> r, const double dr){
     // Normalize the wavefunction
 
     double r0 = r[0];
@@ -258,7 +258,7 @@ void normalise(std::vector<double> &wavefunction, const double num_steps, const 
 
 
 //computing the perturbation for VGR
-double compute_VGR(const vector<double>& wavefunction, const vector<double>& v_GR, const vector<double>& r, double dr) {
+inline double compute_VGR(const std::vector<double>& wavefunction, const std::vector<double>& v_GR, const std::vector<double>& r, double dr) {
 
     int num_steps = size(r);
     double r0 = r[0];
@@ -276,7 +276,7 @@ double compute_VGR(const vector<double>& wavefunction, const vector<double>& v_G
 
 
 //computing the perturbation for VEE part of the first order perturbation 
-double compute_VEE(const vector<double>& wavefunction, const vector<double>& wave_1s, const vector<double>& r, double dr) {
+inline double compute_VEE(const std::vector<double>& wavefunction, const std::vector<double>& wave_1s, const std::vector<double>& r, double dr) {
 
 
     int num_steps = size(r);
@@ -296,7 +296,7 @@ double compute_VEE(const vector<double>& wavefunction, const vector<double>& wav
 
 
 //this is so that we can read the wavefunction from the file and get the last iteration of the wavefunction and use in HF
-std::vector<double> read_wave1s_from_file(const std::string& filename) {
+inline std::vector<double> read_wave1s_from_file(const std::string& filename) {
     std::ifstream input_file(filename);
 
     std::vector<double> wave_1s;
@@ -337,7 +337,31 @@ std::vector<double> read_wave1s_from_file(const std::string& filename) {
 }
 
 
+inline std::vector<double> make_wavefunction(std::vector<double>& wavefunction, const Matrix& EVectors, const std::vector<std::vector<double>>& b_spl, int num_steps, int num_splines, int n, int l) {
+    // Reconstruct the wavefunction for this state
+    wavefunction.resize(num_steps, 0.0);
+// Combine B-splines with eigenvector coefficients to get the wavefunction
+for (int i = 0; i < num_steps; ++i) {
+    for (int j = 0; j < num_splines; ++j) {
+        wavefunction[i] += EVectors(n-l, j) * b_spl[j][i];
+    }
+}
+return wavefunction;
+}
 
+
+inline double decay_rate(std::vector<double>& wave_2s, std::vector<double>& wave_2p, const std::vector<double>& r, double r0, double dr, int num_steps) {
+    // Calculate the decay rate of the 2s to 2p transition
+    // using the formula: decay_rate = 2 * R_ab^2 * omega_ab^3 / 3
+    double R_ab = integrate(wave_2s, wave_2p, r, r0, dr, num_steps);
+    double omega_ab = 0.06791;
+    double unit_change = 1.071e10;
+    double decay_rate = 2 * std::pow(R_ab, 2) * std::pow(omega_ab, 3) / 3 * unit_change;
+
+    double time = std::round((1 / decay_rate * 1e9) * 1e4) / 1e4; // rounding to 4 decimal places
+
+    return time;
+}
 
 
 

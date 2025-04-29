@@ -5,20 +5,22 @@
 #include <fstream>
 #include <vector>
 
-using namespace std;
 
 #include <random>
 #include "bspline.hpp"
 #include "calculateYK.hpp"
 #include "functions.hpp"
 
-std::ofstream output_file_1("Hydrogen_Like_Energy.txt");
-std::ofstream output_file_2("Hydrogen_Like_Radial.txt");
-std::ofstream output_file_3("Hydrogen_Like_Probability_Density.txt");
 
 
 
 int main() {
+
+
+    //should shift inside main in general
+    std::ofstream output_file_1("Hydrogen_Like_Energy.txt");
+    std::ofstream output_file_2("Hydrogen_Like_Radial.txt");
+    std::ofstream output_file_3("Hydrogen_Like_Probability_Density.txt");
 
     double r0 = 1.0e-6;
     double rmax = 30.0;
@@ -44,7 +46,7 @@ int main() {
 
     for(int l=0;l<2;++l){
 
-        std::cout << "L = " << l << endl;
+        std::cout << "L = " << l << std::endl;
 
         // 2. Form potential V(r)
         double Z = 3;
@@ -75,12 +77,7 @@ int main() {
             // Reconstruct the wavefunction for this state
             std::vector<double> wavefunction(num_steps, 0.0);
             
-            // Combine B-splines with eigenvector coefficients to get the wavefunction
-            for (int i = 0; i < num_steps; ++i) {
-                for (int j = 0; j < num_splines; ++j) {
-                    wavefunction[i] += EVectors(n-l, j) * b_spl[j][i];
-                }
-            }
+            make_wavefunction(wavefunction, EVectors, b_spl, num_steps, num_splines, n, l);
             
             normalise(wavefunction,num_steps,r,dr);
 

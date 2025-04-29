@@ -53,7 +53,7 @@ extern "C"
 // RealSymmetric(std::move(matrix));
 // This will 'move' the matrix, instead of copying it, and will destroy
 // the original matrix in the process.
-MatrixAndVector RealSymmetric(Matrix matrix) {
+inline MatrixAndVector RealSymmetric(Matrix matrix) {
   assert(matrix.rows() == matrix.cols() &&
          "RealSymmetric only works for square matrix");
 
@@ -97,7 +97,7 @@ MatrixAndVector RealSymmetric(Matrix matrix) {
 
 
 
-MatrixAndVector GeneralisedEigenvalue(Matrix A, Matrix B) {
+inline MatrixAndVector GeneralisedEigenvalue(Matrix A, Matrix B) {
   assert(A.rows() == A.cols() &&
          "Generalised Eigenvalue only works for square matrix");
   assert(B.rows() == B.cols() &&

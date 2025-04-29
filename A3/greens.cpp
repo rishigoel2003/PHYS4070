@@ -5,7 +5,7 @@
 #include <fstream>
 #include <vector>
 
-using namespace std;
+// using namespace std; getting rid of this to avoid name clashes
 
 #include <random>
 #include "eigen.hpp"
@@ -13,14 +13,15 @@ using namespace std;
 #include "calculateYK.hpp"
 #include "functions.hpp"
 
-std::ofstream output_file_1("Greens_Energy.txt");
-std::ofstream output_file_2("Greens_Wavefunctions.txt");
-std::ofstream output_file_3("Greens_Probability_Density.txt");
-std::ofstream output_file_4("Greens_delta_E.txt");
 
 
 
 int main() {
+    
+    std::ofstream output_file_1("Greens_Energy.txt");
+    std::ofstream output_file_2("Greens_Wavefunctions.txt");
+    std::ofstream output_file_3("Greens_Probability_Density.txt");
+    std::ofstream output_file_4("Greens_delta_E.txt");
 
     double r0 = 1.0e-3;
     double rmax = 60.0;
@@ -29,7 +30,7 @@ int main() {
     int num_splines = 60;
     // 1. Construct Grid
     double dr = (rmax-r0)/num_steps;
-    vector<double> r(num_steps);
+    std::vector<double> r(num_steps);
     
     for (int i = 0; i< num_steps; ++i){
         r[i] = r0+dr*i;
@@ -49,20 +50,19 @@ int main() {
 
     for(int l=0;l<2;++l){
 
-        cout << "L = " << l << endl;
+        std::cout << "L = " << l << std::endl;
 
         // 2. Form potential V(r)
         double Z = 3;
         double h = 1;
         double d = 0.2;
         // double l=0;
-        vector<double> v(num_steps);
-        vector<double> v_GR(num_steps, 0.0);
+        std::vector<double> v(num_steps);
+        std::vector<double> v_GR(num_steps, 0.0);
 
         
         for (int i = 0; i< num_steps; ++i){
             v_GR[i] = (Z-1)/r[i] * (h*(exp(r[i]/d)-1))/(1+h*(exp(r[i]/d)-1));
-            
             v[i] = -Z/r[i] + l*(l+1)/(2*pow(r[i],2)) + v_GR[i];
         }
         
@@ -86,13 +86,7 @@ int main() {
             // Reconstruct the wavefunction for this state
             std::vector<double> wavefunction(num_steps, 0.0);
             
-            // Combine B-splines with eigenvector coefficients to get the wavefunction
-            for (int i = 0; i < num_steps; ++i) {
-                for (int j = 0; j < num_splines; ++j) {
-                    wavefunction[i] += EVectors(n-l, j) * b_spl[j][i];
-                    
-                }
-            }
+            make_wavefunction(wavefunction, EVectors, b_spl, num_steps, num_splines, n, l);
             
             normalise(wavefunction,num_steps,r,dr);
 
@@ -105,27 +99,27 @@ int main() {
 
             
             if (n==0 && l==0){
-                cout << "1s wavefunction" << endl;
+                std::cout << "1s wavefunction" << std::endl;
                 for (int i = 0; i < num_steps; ++i) {
                     wave_1s[i] = wavefunction[i];
                 }
             }
             
             if (l==0 && n==1){
-                cout << "2s wavefunction" << endl;
+                std::cout << "2s wavefunction" << std::endl;
                 double VGR_2s = compute_VGR(wavefunction, v_GR, r, dr);
                 double VEE_2s = compute_VEE(wavefunction,wave_1s,r,dr);
                 double delta_E2s = VEE_2s - VGR_2s;
-                output_file_4 << l << " " <<  delta_E2s << endl;
+                output_file_4 << l << " " <<  delta_E2s << std::endl;
                 wave_2s = wavefunction;
             }
 
             if (l==1 && n==1){
-                cout << "2p wavefunction" << endl;
+                std::cout << "2p wavefunction" << std::endl;
                 double VGR_2p = compute_VGR(wavefunction, v_GR, r, dr);
                 double VEE_2p = compute_VEE(wavefunction,wave_1s,r,dr);
                 double delta_E2p = VEE_2p - VGR_2p;
-                output_file_4 << l << " " << delta_E2p << endl;
+                output_file_4 << l << " " << delta_E2p << std::endl;
                 wave_2p = wavefunction;
             }
 
@@ -134,14 +128,10 @@ int main() {
     }
 
 
-    double R_ab = integrate(wave_2s, wave_2p, r, r0, dr, num_steps);
-    double omega_ab = 0.06791;
-    
-    double decay_rate = 2 * std::pow(R_ab, 2) * std::pow(omega_ab, 3) / 3 * 1.071e10;
-    double time = std::round((1 / decay_rate * 1e9) * 1e4) / 1e4; // rounding to 4 decimal places
+
+    double time = decay_rate(wave_2s, wave_2p, r, r0, dr, num_steps);
 
     std::cout << "Time (ns): " << time << std::endl;
-
     
     return 0;
 }
