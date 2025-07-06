@@ -17,22 +17,19 @@ using ComplexVector = vector<Complex>;
 
 int main() {
     // Open file for writing results
-    std::ofstream outFile("execution_times.txt");
+    std::ofstream outFile("Part2/execution_times.txt");
     
     // Write header to file
     outFile << "N\tMatrix Size\tExecution Time (ms)" << std::endl;
     
-    for (int N = 2; N < 9; N++) {
+    for (int N = 2; N < 12; N++) {
+
+        // Start timing
         auto start = std::chrono::high_resolution_clock::now();
 
         int size = std::pow(2, N);  // Size of the matrix (2^N)
         double g = 1.0;
         
-        // Start timing
-        
-        Matrix I({{1, 0}, {0, 1}}); // Identity matrix
-        Matrix Z({{0.5, 0}, {0, -0.5}}); // sigmaZ matrix
-        Matrix X({{0, 0.5}, {0.5, 0}}); // sigmaX matrix
         
         Matrix first = ZTerm(N);
         Matrix second = XTerm(N, g);
@@ -50,9 +47,9 @@ int main() {
         // Write results to file
         outFile << N << "\t" << size << "\t" << duration << std::endl;
         
-        // Also output to console for monitoring progress
-        std::cout << "N = " << N << ", Matrix Size = " << size 
-                  << ", Time = " << duration << " ms" << std::endl;
+        // // Also output to console for monitoring progress
+        // std::cout << "N = " << N << ", Matrix Size = " << size 
+        //           << ", Time = " << duration << " ms" << std::endl;
     }
     
     outFile.close();
